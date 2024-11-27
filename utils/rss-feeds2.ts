@@ -1,32 +1,20 @@
 import { fetchRSSFeed, NewsItem } from './rss-parser';
-import { parseString } from 'xml2js';
 
-export class RSSFeeds {
+export class RSSFeeds2 {
   private feeds: { url: string; name: string }[];
   private maxCounts: Record<string, number> = {};
 
   constructor() {
-    this.feeds = [];
-    this.loadFeedsFromXML();
-  }
-
-  private async loadFeedsFromXML() {
-    try {
-      const response = await fetch('/rss-feeds.xml');
-      const xmlData = await response.text();
-      parseString(xmlData, (err, result) => {
-        if (err) {
-          console.error('XML parsing error:', err);
-          return;
-        }
-        this.feeds = result['rss-feeds'].feed.map((feed: any) => ({
-          url: feed.url[0],
-          name: feed.name[0]
-        }));
-      });
-    } catch (error) {
-      console.error('Error loading RSS feeds from XML:', error);
-    }
+    this.feeds = [
+      { url: 'https://www.sabah.com.tr/rss/anasayfa.xml', name: 'Sabah Ana Sayfa' },
+      { url: 'https://www.sabah.com.tr/rss/ekonomi.xml', name: 'Sabah Ekonomi' },
+      { url: 'https://www.sabah.com.tr/rss/spor.xml', name: 'Sabah Spor' },
+      { url: 'https://www.sabah.com.tr/rss/dunya.xml', name: 'Sabah Dünya' },
+      { url: 'https://www.takvim.com.tr/rss/anasayfa.xml', name: 'Takvim Ana Sayfa' },
+      { url: 'https://www.cnnturk.com/feed/rss/all/news', name: 'CNN Türk Haberler' },
+      { url: 'https://www.cnnturk.com/feed/rss/turkiye/news', name: 'CNN Türk Türkiye' },
+      { url: 'https://www.cnnturk.com/feed/rss/dunya/news', name: 'CNN Türk Dünya' },
+    ];
   }
 
   getFeeds() {
@@ -78,27 +66,6 @@ export class RSSFeeds {
 
   getMaxCounts(): Record<string, number> {
     return this.maxCounts;
-  }
-
-  async testAndFilterFeeds(): Promise<void> {
-    const workingFeeds: { url: string; name: string }[] = [];
-
-    for (const feed of this.feeds) {
-      try {
-        const news = await this.fetchNewsWithRetry(feed, 1); // Sadece bir kez deneyin
-        if (news.length > 0) {
-          workingFeeds.push(feed);
-          console.log(`${feed.name} çalışıyor.`);
-        } else {
-          console.log(`${feed.name} haber getirmedi.`);
-        }
-      } catch (error) {
-        console.error(`${feed.name} çalışmıyor:`, error);
-      }
-    }
-
-    this.feeds = workingFeeds;
-    console.log(`Toplam çalışan feed sayısı: ${workingFeeds.length}`);
   }
 }
 

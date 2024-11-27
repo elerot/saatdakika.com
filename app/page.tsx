@@ -4,9 +4,9 @@ import { useEffect, useState, useCallback, useMemo } from 'react'
 import { SiteHeader } from "@/components/site-header"
 import { NewsSection } from "@/components/news-section"
 import { NewsItem } from '@/utils/rss-parser'
-import { RSSFeeds } from '@/utils/rss-feeds'
+import { RSSFeeds2 } from '@/utils/rss-feeds2'
 
-const rssFeeds = new RSSFeeds();
+const rssFeeds = new RSSFeeds2();
 
 export default function Home() {
   const [allNews, setAllNews] = useState<NewsItem[]>([]);
