@@ -15,7 +15,7 @@ const AdBanner = () => {
      data-ad-client="ca-pub-4763427752391920"
      data-ad-slot="1026158741"
      data-ad-format="auto"
-     data-full-width-responsive="true">
+     data-full-width-responsive="false">
      </ins>
   );
 };

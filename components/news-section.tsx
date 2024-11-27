@@ -17,7 +17,7 @@ const AdCard = () => (
       <CardTitle className="text-lg">Advertisement</CardTitle>
     </CardHeader> */}
     <CardContent className="flex-grow flex items-center justify-center">
-      <div id="adContainer" className="w-full h-full min-h-[100px]">
+      <div id="adContainer" className="w-full h-full min-h-[50px]">
         <AdBanner/>
       </div>
     </CardContent>
@@ -33,7 +33,6 @@ export function NewsSection({ news }: NewsSectionProps) {
   }
   return (
     <>
-
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" >
         {news.map((item, index) => (
           <React.Fragment key={uuidv4()}>
