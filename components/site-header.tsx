@@ -9,17 +9,19 @@ interface SiteHeaderProps {
   onRefresh: () => void;
   sources: string[];
   newsCounts: Record<string, number>;
+  maxNewsCounts: Record<string, number>;
   onSourceSelect: (source: string | null) => void;
   selectedSource: string | null;
 }
 
-export function SiteHeader({ onSearch, onRefresh, sources, newsCounts, onSourceSelect, selectedSource }: SiteHeaderProps) {
+export function SiteHeader({ onSearch, onRefresh, sources, newsCounts, maxNewsCounts, onSourceSelect, selectedSource }: SiteHeaderProps) {
   const totalNewsCount = Object.values(newsCounts).reduce((sum, count) => sum + count, 0);
+  const totalMaxNewsCount = Object.values(maxNewsCounts).reduce((sum, count) => sum + count, 0);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full px-4">
-        <div className="flex flex-col items-center py-4">
+        <div className="flex flex-col items-center py-2"> {/* Updated className */}
           <div className="flex items-center justify-between w-full mb-4">
             <div className="flex items-center gap-2">
               <Clock className="h-6 w-6 text-primary" />
@@ -39,29 +41,28 @@ export function SiteHeader({ onSearch, onRefresh, sources, newsCounts, onSourceS
             />
           </div>
           <div className="w-full">
-            <div className="h-[120px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
-              <div className="flex flex-wrap gap-2">
-                <Badge
-                  variant={selectedSource === null ? "default" : "outline"}
-                  className="cursor-pointer whitespace-nowrap mb-2"
-                  onClick={() => onSourceSelect(null)}
-                >
-                  Tümü ({totalNewsCount})
-                </Badge>
-                {sources.map((source) => {
-                  const count = newsCounts[source] || 0;
-                  return (
-                    <Badge
-                      key={source}
-                      variant={selectedSource === source ? "default" : "outline"}
-                      className={`cursor-pointer whitespace-nowrap mb-2 ${count === 0 ? 'opacity-50' : ''}`}
-                      onClick={() => onSourceSelect(source)}
-                    >
-                      {source} ({count})
-                    </Badge>
-                  );
-                })}
-              </div>
+            <div className="flex flex-wrap gap-2 max-h-[4.5rem] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+              <Badge
+                variant={selectedSource === null ? "default" : "outline"}
+                className="cursor-pointer whitespace-nowrap mb-2"
+                onClick={() => onSourceSelect(null)}
+              >
+                Tümü ({totalNewsCount}/{totalMaxNewsCount})
+              </Badge>
+              {sources.map((source) => {
+                const count = newsCounts[source] || 0;
+                const maxCount = maxNewsCounts[source] || 0;
+                return (
+                  <Badge
+                    key={source}
+                    variant={selectedSource === source ? "default" : "outline"}
+                    className={`cursor-pointer whitespace-nowrap mb-2 ${count === 0 && maxCount === 0 ? 'opacity-50' : ''}`}
+                    onClick={() => onSourceSelect(source)}
+                  >
+                    {source} ({count}/{maxCount})
+                  </Badge>
+                );
+              })}
             </div>
           </div>
         </div>

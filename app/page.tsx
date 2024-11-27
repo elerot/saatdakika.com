@@ -4,10 +4,9 @@ import { useEffect, useState, useCallback, useMemo } from 'react'
 import { SiteHeader } from "@/components/site-header"
 import { NewsSection } from "@/components/news-section"
 import { NewsItem } from '@/utils/rss-parser'
-import { RSSFeeds2 } from '@/utils/rss-feeds2'
-import Script from 'next/script'
+import { RSSFeeds } from '@/utils/rss-feeds'
 
-const rssFeeds = new RSSFeeds2();
+const rssFeeds = new RSSFeeds();
 
 export default function Home() {
   const [allNews, setAllNews] = useState<NewsItem[]>([]);
@@ -17,6 +16,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
   const [newsCounts, setNewsCounts] = useState<Record<string, number>>({});
+  const [maxNewsCounts, setMaxNewsCounts] = useState<Record<string, number>>({});
 
   const fetchAllNews = useCallback(async (source: string | null = null) => {
     setIsLoading(true);
@@ -24,16 +24,16 @@ export default function Home() {
     setAllNews([]);
     setFilteredNews([]);
     setNewsCounts({});
+    // setMaxNewsCounts({}); // Bu satırı kaldırıyoruz
 
     try {
-      const news = await rssFeeds.fetchNewsBySource(source);
-      setAllNews(news);
-      setFilteredNews(news);
-      const counts = news.reduce((acc, item) => {
-        acc[item.source] = (acc[item.source] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
-      setNewsCounts(counts);
+      const generator = rssFeeds.fetchNewsBySourceIncremental(source);
+      for await (const { news, sourceName, maxCount } of generator) {
+        setAllNews(prevNews => [...prevNews, ...news]);
+        setFilteredNews(prevNews => [...prevNews, ...news]);
+        setNewsCounts(prevCounts => ({ ...prevCounts, [sourceName]: (prevCounts[sourceName] || 0) + news.length }));
+        setMaxNewsCounts(prevMaxCounts => ({ ...prevMaxCounts, [sourceName]: maxCount }));
+      }
     } catch (err) {
       console.error('Haber yükleme hatası:', err);
       setError('Haberler yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
@@ -65,30 +65,27 @@ export default function Home() {
 
   const handleSourceSelect = (source: string | null) => {
     setSelectedSource(source);
+    fetchAllNews(source);
   };
 
-  const sortedSources = useMemo(() => {
-    return rssFeeds.getSourceNames().sort((a, b) => (newsCounts[b] || 0) - (newsCounts[a] || 0));
-  }, [newsCounts]);
+  // Eski sortedSources'u kaldırın:
+  // const sortedSources = useMemo(() => {
+  //   return rssFeeds.getSourceNames().sort((a, b) => (newsCounts[b] || 0) - (newsCounts[a] || 0));
+  // }, [newsCounts]);
 
   return (
     <div className="min-h-screen bg-background">
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4763427752391920`}
-          strategy="lazyOnload"
-          crossOrigin="anonymous"
-        />
       <SiteHeader
         onSearch={handleSearch}
         onRefresh={handleRefresh}
-        sources={sortedSources}
+        sources={rssFeeds.getSourceNames()}
         newsCounts={newsCounts}
+        maxNewsCounts={maxNewsCounts}
         onSourceSelect={handleSourceSelect}
         selectedSource={selectedSource}
       />
-      <main className="container mx-auto px-4 py-6">
-        {isLoading ? (
+      <main className="container mx-auto px-4 py-2">
+        {isLoading && allNews.length === 0 ? (
           <div>Haberler yükleniyor...</div>
         ) : error ? (
           <div className="text-red-500">{error}</div>

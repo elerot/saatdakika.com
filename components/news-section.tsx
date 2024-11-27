@@ -13,9 +13,6 @@ interface NewsSectionProps {
 
 const AdCard = () => (
   <Card className="flex flex-col h-full">
-    {/* <CardHeader className="relative">
-      <CardTitle className="text-lg">Advertisement</CardTitle>
-    </CardHeader> */}
     <CardContent className="flex-grow flex items-center justify-center">
       <div id="adContainer" className="w-full h-full min-h-[50px]">
         <AdBanner/>
@@ -31,6 +28,15 @@ export function NewsSection({ news }: NewsSectionProps) {
       (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
     );
   }
+
+  function removeLastSentence(description: string): string {
+    const sentences = description.split('.');
+    if (sentences[sentences.length - 1].trim().toLowerCase() === 'devamı için tıklayınız') {
+      sentences.pop();
+    }
+    return sentences.join('.').trim();
+  }
+
   return (
     <>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" >
@@ -62,7 +68,7 @@ export function NewsSection({ news }: NewsSectionProps) {
               </CardHeader>
               <CardContent className="flex-grow">
                 <div className="text-sm text-muted-foreground space-y-2">
-                  {item.description.split('\n').slice(0, 3).map((line, i) => (
+                  {removeLastSentence(item.description).split('\n').slice(0, 3).map((line, i) => (
                     <p key={i}>{line}</p>
                   ))}
                 </div>
