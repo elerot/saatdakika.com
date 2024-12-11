@@ -15,8 +15,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "SaatDakika",
+  title: "Saat Dakika",
   description: "www.saatdakika.com",
+  keywords:"Tüm Haber Kaynaklarından Haberler, Haberler, Son Dakika, Dünya, Ekonomi, Türkiye, Gündem, Spor, Sanat"
 };
 
 export default function RootLayout({
