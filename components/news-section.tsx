@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import Image from "next/image"
-import React from "react"
+import React, { useState } from "react"
 import AdBanner from "./AdBanner"
+import IframeModal from './IframeModal'
 
 interface NewsSectionProps {
   news: NewsItem[];
@@ -22,6 +23,7 @@ const AdCard = () => (
 );
 
 export function NewsSection({ news }: NewsSectionProps) {
+  const [openArticleUrl, setOpenArticleUrl] = useState<string | null>(null);
 
   function uuidv4() {
     return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
@@ -74,10 +76,8 @@ export function NewsSection({ news }: NewsSectionProps) {
                 </div>
               </CardContent>
               <CardContent className="pt-0">
-                <Button asChild className="w-full">
-                  <Link href={item.link} target="_blank" rel="noopener noreferrer">
-                    Haberi Oku
-                  </Link>
+                <Button className="w-full" onClick={() => setOpenArticleUrl(item.link)}>
+                  Haberi Oku
                 </Button>
               </CardContent>
             </Card>
@@ -85,6 +85,9 @@ export function NewsSection({ news }: NewsSectionProps) {
           </React.Fragment>
         ))}
       </div>
+      {openArticleUrl && (
+        <IframeModal url={openArticleUrl} onClose={() => setOpenArticleUrl(null)} />
+      )}
     </>
   )
 }

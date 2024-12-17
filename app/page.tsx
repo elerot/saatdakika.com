@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { SiteHeader } from "@/components/site-header"
 import { NewsSection } from "@/components/news-section"
 import { NewsItem } from '@/utils/rss-parser'
@@ -24,7 +24,6 @@ export default function Home() {
     setAllNews([]);
     setFilteredNews([]);
     setNewsCounts({});
-    // setMaxNewsCounts({}); // Bu satırı kaldırıyoruz
 
     try {
       const generator = rssFeeds.fetchNewsBySourceIncremental(source);
@@ -67,11 +66,6 @@ export default function Home() {
     setSelectedSource(source);
     fetchAllNews(source);
   };
-
-  // Eski sortedSources'u kaldırın:
-  // const sortedSources = useMemo(() => {
-  //   return rssFeeds.getSourceNames().sort((a, b) => (newsCounts[b] || 0) - (newsCounts[a] || 0));
-  // }, [newsCounts]);
 
   return (
     <div className="min-h-screen bg-background">
