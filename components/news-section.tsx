@@ -6,17 +6,28 @@ import Link from "next/link"
 import Image from "next/image"
 import React, { useState } from "react"
 import AdBanner from "./AdBanner"
+import AdBannerYndx from "./AdBannerYndx"
 import IframeModal from './IframeModal'
 
 interface NewsSectionProps {
   news: NewsItem[];
 }
 
+function uuidv4() {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+    (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+  );
+}
+
+const components = [<AdBanner key={uuidv4()}/>, <AdBannerYndx key={uuidv4()}/>];
+const randomIndex = Math.floor(Math.random()*2);
+
 const AdCard = () => (
   <Card className="flex flex-col h-full">
     <CardContent className="flex-grow flex items-center justify-center">
       <div id="adContainer" className="w-full h-full min-h-[50px]">
-        <AdBanner/>
+        {/* <AdBanner/> */}
+        {components[randomIndex]}
       </div>
     </CardContent>
   </Card>
@@ -25,11 +36,7 @@ const AdCard = () => (
 export function NewsSection({ news }: NewsSectionProps) {
   const [openArticleUrl, setOpenArticleUrl] = useState<string | null>(null);
 
-  function uuidv4() {
-    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-      (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
-    );
-  }
+  
 
   function removeLastSentence(description: string): string {
     const sentences = description.split('.');
@@ -62,7 +69,7 @@ export function NewsSection({ news }: NewsSectionProps) {
                   </div>
                 )}
                 <CardTitle className="text-lg">
-                  <Link href={item.link} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  <Link href={item.link} target="_blank" rel="nofollow" className="hover:underline">
                     {item.title}
                   </Link>
                 </CardTitle>

@@ -41,6 +41,10 @@ export default function RootLayout({
           `}
         </Script>
         <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4763427752391920" crossOrigin="anonymous"></Script>
+
+        
+        <Script id="yandex-conextCb">window.yaContextCb=window.yaContextCb||[]</Script>
+        <Script src="https://yandex.ru/ads/system/context.js" async></Script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
