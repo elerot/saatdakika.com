@@ -19,15 +19,15 @@ function uuidv4() {
   );
 }
 
-const components = [<AdBanner key={uuidv4()}/>, <AdBannerYndx key={uuidv4()}/>];
-const randomIndex = Math.floor(Math.random()*2);
-
+// const components = [<AdBanner key={uuidv4()}/>, <AdBannerYndx key={uuidv4()}/>];
+// const randomIndex = Math.floor(Math.random()*2);
 const AdCard = () => (
   <Card className="flex flex-col h-full">
     <CardContent className="flex-grow flex items-center justify-center">
       <div id="adContainer" className="w-full h-full min-h-[50px]">
         {/* <AdBanner/> */}
-        {components[randomIndex]}
+        {/* {components[randomIndex]} */}
+        <AdBannerYndx key={uuidv4()}/>
       </div>
     </CardContent>
   </Card>
