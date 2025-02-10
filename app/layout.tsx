@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
 
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-HV62F5XDP1"></Script>
+        {/* <Script async src="https://www.googletagmanager.com/gtag/js?id=G-HV62F5XDP1"></Script>
         <Script id="google-analytics">
         {`
             window.dataLayer = window.dataLayer || [];
@@ -40,7 +40,7 @@ export default function RootLayout({
             gtag('config', 'G-HV62F5XDP1');
           `}
         </Script>
-        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4763427752391920" crossOrigin="anonymous"></Script>
+        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4763427752391920" crossOrigin="anonymous"></Script> */}
 
         
         <Script id="yandex-conextCb">window.yaContextCb=window.yaContextCb||[]</Script>
